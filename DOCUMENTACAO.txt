@@ -1,0 +1,81 @@
+DOCUMENTACAO TECNICA - QUIZ VIBE CHECK
+=======================================
+
+1. ARQUIVOS
+
+index.html
+Contem as quatro telas da aplicacao: introducao, perguntas, carregamento e resultado. A introducao coleta nome e idade antes do inicio. Todas as telas existem no HTML, mas apenas uma fica visivel por vez.
+
+style.css
+Define a identidade visual neon, o layout responsivo, os botoes de resposta e as animacoes. A classe .hidden esconde as telas que nao estao ativas.
+
+script.js
+Controla os dados do usuario, a navegacao entre 9 situacoes do cotidiano, o calculo dos seis perfis e a criacao do arquivo CSV.
+
+2. COMO AS PERGUNTAS SAO REPRESENTADAS
+
+Todas as perguntas ficam no inicio do arquivo script.js, dentro do array questions. O quiz atual possui 9 perguntas e cada uma tem 4 alternativas. Cada item tem:
+
+- text: o enunciado exibido na tela.
+- answers: uma lista com as alternativas.
+- letter: a letra visual da alternativa.
+- text: o texto da alternativa.
+- profile: o perfil que recebe um ponto quando a alternativa e escolhida. Os perfis atuais sao A, B, C, D, E e F.
+
+Exemplo:
+
+{
+  text: 'Seu amigo fez um convite inesperado. O que voce faz?',
+  answers: [
+    { letter: 'A', text: 'Topo e vejo no que da', profile: 'D' },
+    { letter: 'B', text: 'Pergunto os detalhes primeiro', profile: 'C' },
+    { letter: 'C', text: 'Sugiro uma versao mais tranquila', profile: 'F' },
+    { letter: 'D', text: 'So vou se todo mundo estiver confortavel', profile: 'E' }
+  ]
+}
+
+Para adicionar uma pergunta, insira um novo objeto dentro do array questions. Use 4 objetos em answers para manter o formato atual. Nao e necessario alterar o HTML, porque a funcao renderQuestion cria os botoes automaticamente a partir dos dados. O indicador de progresso tambem se ajusta sozinho usando questions.length.
+
+Para criar uma alternativa, escolha um texto cotidiano, sem mencionar diretamente temas clinicos, e defina uma letra e um profile. O perfil usado no campo profile precisa existir em profiles e no objeto inicial de pontuacao da funcao calculateProfile.
+
+As perguntas foram escritas como cenas de escola, amizades, redes sociais, aparencia, sono, roles e decisoes inesperadas. Essa camada cotidiana deixa o quiz leve e divertido, enquanto as respostas permitem observar tendencias de autonomia, busca de aprovacao, autocuidado, impulsividade e organizacao sem apresentar o resultado como diagnostico.
+
+3. FLUXO DO QUIZ
+
+Ao enviar o formulario inicial, o evento submit impede o recarregamento da pagina, salva nome e idade no objeto state, zera as respostas e chama renderQuestion().
+
+state.currentQuestion indica qual pergunta esta sendo exibida. A funcao renderQuestion usa esse indice, atualiza o progresso e cria um botao para cada alternativa.
+
+Ao clicar em uma alternativa, selectAnswer() adiciona a letra do perfil em state.answers e avanca currentQuestion. Se ainda houver perguntas, a tela loading aparece por 1100 milissegundos. Depois, a proxima pergunta e renderizada. Isso permite que a animacao dos circulos seja percebida entre as perguntas.
+
+Depois da ultima resposta, a mesma tela de carregamento aparece por 1500 milissegundos antes de showResult().
+
+4. CALCULO DA PONTUACAO E PERFIS
+
+A funcao calculateProfile() usa reduce() para contar quantas respostas A, B, C, D, E e F foram escolhidas:
+
+{ A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 }
+
+Cada letra armazenada em state.answers incrementa a pontuacao correspondente. Depois, reduce() percorre as chaves e conserva o perfil com maior pontuacao. Em caso de empate, o primeiro perfil com a maior pontuacao permanece vencedor. Com a ordem atual A, B, C, D, E, F, um empate favorece A; isso pode ser alterado caso deseje outra regra.
+
+Os seis textos dos resultados ficam no objeto profiles: O Zumbi das Telas, O Rei / A Rainha da Galera, O Estrategista do Role, A Faisca Impulsiva, A Bussola do Autocuidado e O Radar das Tendencias. Cada descricao termina com um conselho positivo e leve. Para mudar um titulo ou uma descricao, edite apenas esse objeto.
+
+5. COMO O CSV E GERADO
+
+A funcao downloadResultCsv() coleta nome, idade, perfil, titulo e sequencia de respostas. Esses dados sao organizados em duas linhas: cabecalho e resultado.
+
+A funcao csvEscape() coloca cada valor entre aspas e duplica aspas internas, evitando que nomes ou textos com pontuacao quebrem as colunas. O separador usado e ponto e virgula, comum em planilhas configuradas para portugues.
+
+Um BOM UTF-8 (\\ufeff) e adicionado no inicio para que o Excel reconheca corretamente acentos. O Blob transforma o texto em um arquivo temporario, URL.createObjectURL cria um endereco local e um link invisivel inicia o download. O nome do arquivo usa o prefixo resultado-quiz-buzzfeed, o nome do usuario e caracteres especiais sao substituidos por hifens.
+
+6. PERSONALIZACAO RAPIDA
+
+- Troque cores em :root no inicio de style.css.
+- Troque textos e alternativas no array questions. Para manter o ritmo visual, prefira perguntas curtas e 4 respostas distintas.
+- Troque os resultados no objeto profiles.
+- Para criar um novo perfil, adicione uma nova chave, como G, em profiles; use profile: 'G' nas alternativas; e inclua G no objeto de pontuacao de calculateProfile().
+- Para mudar a duracao da transicao, altere os valores de window.setTimeout() em selectAnswer().
+
+O resultado e uma leitura recreativa de padroes de resposta, nao uma avaliacao psicologica ou diagnostico. O texto deve continuar acolhedor e nunca sugerir que uma pontuacao define a pessoa.
+
+Os arquivos podem ser testados abrindo index.html diretamente no navegador. A fonte do Google Fonts depende de internet; o quiz continua funcional sem ela usando a familia alternativa do CSS.

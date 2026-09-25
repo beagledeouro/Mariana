@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qual é a sua vibe de adolescente?</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <section id="intro-screen" class="screen intro-screen" aria-labelledby="intro-title">
+      <div class="top-label">QUIZ // VIBE CHECK</div>
+      <div class="intro-copy">
+        <p class="eyebrow">Descubra o seu resultado inesperado</p>
+        <h1 id="intro-title">Qual é a sua<br><span>vibe de rolê?</span></h1>
+        <p class="intro-text">Responda 9 perguntas rápidas sobre situações da vida e descubra qual personalidade combina com você.</p>
+      </div>
+
+      <form id="start-form" class="start-form">
+        <label for="user-name">Como podemos te chamar?</label>
+        <input id="user-name" name="name" type="text" autocomplete="name" maxlength="40" placeholder="Seu nome" required>
+
+        <label for="user-age">Quantos anos você tem?</label>
+        <input id="user-age" name="age" type="number" inputmode="numeric" min="10" max="99" placeholder="Sua idade" required>
+
+        <button class="primary-button" type="submit">COMEÇAR O QUIZ <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="tiny-note">Sem julgamento. Só diversão e autoconhecimento.</p>
+    </section>
+
+    <section id="quiz-screen" class="screen quiz-screen hidden" aria-labelledby="question-title">
+      <header class="quiz-header">
+        <span class="quiz-mark">VIBE//CHECK</span>
+        <span id="progress-label">01 / 09</span>
+      </header>
+      <div class="progress-track" aria-hidden="true"><div id="progress-bar" class="progress-bar"></div></div>
+
+      <div class="question-wrap">
+        <p id="question-category" class="eyebrow">PERGUNTA 01</p>
+        <h2 id="question-title"></h2>
+        <div id="answers" class="answers" role="group" aria-label="Opções de resposta"></div>
+      </div>
+    </section>
+
+    <section id="loading-screen" class="screen loading-screen hidden" aria-live="polite">
+      <div class="loader-orbit" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <p class="eyebrow">ANALISANDO SUA VIBE</p>
+      <h2>Consultando<br><span>as estrelas...</span></h2>
+      <p id="loading-message">Misturando respostas, referências e um pouco de caos.</p>
+    </section>
+
+    <section id="result-screen" class="screen result-screen hidden" aria-labelledby="result-title">
+      <div class="result-burst" aria-hidden="true"></div>
+      <p class="eyebrow">RESULTADO DE <span id="result-name"></span></p>
+      <h2 id="result-title"></h2>
+      <p id="result-description" class="result-description"></p>
+      <div class="result-stats">
+        <div><strong id="result-profile">A</strong><span>perfil detectado</span></div>
+        <div><strong id="result-user-age">--</strong><span>anos de experiência de vida</span></div>
+      </div>
+      <div class="result-actions">
+        <button id="download-csv" class="primary-button" type="button">BAIXAR MEU RESULTADO <span aria-hidden="true">↓</span></button>
+        <button id="restart-quiz" class="text-button" type="button">Refazer o quiz</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
